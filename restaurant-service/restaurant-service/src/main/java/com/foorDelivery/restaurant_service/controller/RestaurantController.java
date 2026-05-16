@@ -1,19 +1,32 @@
 package com.foorDelivery.restaurant_service.controller;
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
+import com.foorDelivery.restaurant_service.entity.MenuItem;
+import com.foorDelivery.restaurant_service.entity.Restaurant;
+import com.foorDelivery.restaurant_service.service.RestaurantService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Map;
 
 @RestController
+@RequestMapping("/restaurants")
 public class RestaurantController {
-    @GetMapping("/restaurant")
-    public List<Map<String, Object>> getRestaurants() {
-        return List.of(
-                Map.of("id", 1, "name", "Dominos", "city", "Bangalore"),
-                Map.of("id", 2, "name", "KFC", "city", "Hyderabad"),
-                Map.of("id", 3, "name", "Burger King", "city", "Delhi")
-        );
+    @Autowired
+    private RestaurantService restaurantService;
+
+    @GetMapping
+    public List<Restaurant> getRestaurants() {
+        return restaurantService.getAllRestaurant();
+    }
+
+    @GetMapping("/{id}")
+    public List<MenuItem> getMenuItems(@PathVariable("id")Long id){
+        return restaurantService.getMenuItemById(id);
+    }
+
+    @PostMapping
+    public String addRestaurant(@RequestBody Restaurant restaurant){
+        restaurantService.addRestaurant(restaurant);
+        return "Added restaurant";
     }
 }
